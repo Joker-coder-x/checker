@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../dist/checker.min.js"></script>
+</head>
+
+<body>
+    <form>
+        <input type="text" value="test" name="test">
+        <input type="text" value="test" name="test2">
+        <input type="file" name="file" multiple>
+        <button id="submit">提交</button>
+    </form>
+
+</body>
+<script>
+    const button = document.querySelector('#submit');
+
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const form = document.forms[0],
+            input = document.querySelector('input'),
+            formData = new FormData(form);
+        const rules = [{
+            name: 'test',
+            rule: 'chsDash|max:10'
+        }, {
+            name: 'file',
+            rule: 'fileSize:102400|fileExt:png,jpg,jpeg,txt|fileMime:text/plain,text/html,image/png,/image/jpeg'
+        }, {
+            name: 'test2',
+            rule: 'confirm:test'
+        }, ];
+
+        console.log(formData.get('test5'));
+
+        const res = checker(formData, rules);
+        console.log(res);
+    });
+
+    const data = {
+        name: 'M',
+        email: "3014375877@qq.com",
+        img: "http://www.baidu.com",
+        ip: "255.198.0.1",
+        idcard: '362202200008053015',
+        tel: "0791-6559634",
+        phone: "15932841821",
+        postcode: '331123',
+        gender: '男',
+        hobby: "打王者",
+        age: 18,
+        text: "this is test",
+        score: 100,
+        size: 43,
+        deadline: '2021-04-20',
+        birthday: '2020-01-01',
+        test: 123
+    };
+
+    //rule的构成 "子规则{1}(.修饰符)*(:参数)?"
+    const rules = [{
+        name: 'name',
+        rule: 'alpha',
+    }, {
+        name: 'email',
+        rule: 'email|require'
+    }, {
+        name: 'img',
+        rule: 'url'
+    }, {
+        name: 'ip',
+        rule: 'ip'
+    }, {
+        name: 'idcard',
+        rule: 'idcard'
+    }, {
+        name: 'tel',
+        rule: "telephone"
+    }, {
+        name: 'phone',
+        rule: "phone"
+    }, {
+        name: 'postcode',
+        rule: 'postcode'
+    }, {
+        name: 'gender',
+        rule: 'in:男,女'
+    }, {
+        name: 'hobby',
+        rule: 'notIn:睡觉,吃饭|max:5|require'
+    }, {
+        name: 'age',
+        rule: 'between:15,18.1'
+    }, {
+        name: 'text',
+        rule: 'length:5,20'
+    }, {
+        name: 'score',
+        rule: '=:100'
+    }, {
+        name: 'size',
+        rule: '>=:43'
+    }, {
+        name: 'deadline',
+        rule: 'after:2021-04-19'
+    }, {
+        name: 'birthday',
+        rule: 'expire:2020-01-01,2020-08-05'
+    }, {
+        name: 'test',
+        rule: /[0-9]+/
+    }];
+
+    const res = checker(data, rules);
+
+    if (!res.result) {
+        console.error(res.errMsg)
+    } else {
+        console.log('验证通过');
+    }
+</script>
+
+</html>
